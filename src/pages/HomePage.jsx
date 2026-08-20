@@ -5,6 +5,7 @@ import { LocationsTable } from '../components/LocationsTable'
 
 export function HomePage() {
   const [modalAbierto, setModalAbierto] = useState(false)
+  const [selectedStation, setSelectedStation] = useState(null)
   const [stations, setStations] = useState([])
   const [stats, setStats] = useState({
     totalStations: 0,
@@ -52,6 +53,11 @@ export function HomePage() {
     loadData()
   }, [])
 
+  const handleSelectStation = (station) => {
+    setSelectedStation(station)
+    setModalAbierto(true)
+  }
+
   return (
     <>
       <section className="hero-banner">
@@ -97,7 +103,7 @@ export function HomePage() {
                 stations={stations}
                 loading={loading}
                 error={error}
-                onSelectStation={() => setModalAbierto(true)}
+                onSelectStation={handleSelectStation}
               />
             </tbody>
           </table>
@@ -109,7 +115,12 @@ export function HomePage() {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setModalAbierto(false)}>✕</button>
             <div className="modal-body">
-              <p>Aquí verás el detalle de la estación seleccionada.</p>
+              <h3>{selectedStation?.name || 'Detalles de la estación'}</h3>
+              <p style={{ marginTop: '10px' }}>
+                <strong>ID:</strong> {selectedStation?.id}<br />
+                <strong>Localidad:</strong> {selectedStation?.locality || 'No disponible'}<br />
+                <strong>Sensores disponibles:</strong> {selectedStation?.sensors?.length || 0}
+              </p>
             </div>
           </div>
         </div>
